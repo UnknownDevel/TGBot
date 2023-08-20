@@ -241,17 +241,15 @@ async fn main() -> Result<(), Error> {
     let mut turnsvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
 
     while let Some(update) = stream.next().await {
-        // If the received update contains a new message...
-        curvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
-        stream = api.stream();
-        (cpuchoice, playerchoice) = ("", "");
-        turnsvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
-
-        stat = Gamestate::Nowin;
         let update = update?;
         if let UpdateKind::Message(message) = update.kind {
             if let MessageKind::Text { ref entities, ref data } = message.kind {
                 if iteration == 0{
+                    stat = Gamestate::Nowin;
+                    curvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
+                    stream = api.stream();
+                    (cpuchoice, playerchoice) = ("", "");
+                    turnsvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
                     let ent: Option<MessageEntity> = entities.get(0).cloned();
                     if let Some(entity) = ent{
                         if MessageEntityKind::BotCommand == entity.kind && data.contains("/start"){
@@ -317,7 +315,6 @@ async fn main() -> Result<(), Error> {
                             api.send(message.text_reply("You win! Type in the command /start to play again")).await?;
 
                             iteration = 0;
-                            
                         } else if matches!(stat, Gamestate::CPUwin){
 
                             api.send(message.text_reply(format!("\n {}{}{} \n {}{}{} \n {}{}{}", 
