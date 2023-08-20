@@ -242,6 +242,11 @@ async fn main() -> Result<(), Error> {
 
     while let Some(update) = stream.next().await {
         // If the received update contains a new message...
+        curvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
+        stream = api.stream();
+        (cpuchoice, playerchoice) = ("", "");
+        turnsvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
+
         stat = Gamestate::Nowin;
         let update = update?;
         if let UpdateKind::Message(message) = update.kind {
@@ -312,11 +317,7 @@ async fn main() -> Result<(), Error> {
                             api.send(message.text_reply("You win! Type in the command /start to play again")).await?;
 
                             iteration = 0;
-                            curvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
-                            stream = api.stream();
-                            (cpuchoice, playerchoice) = ("", "");
-                            turnsvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
-
+                            
                         } else if matches!(stat, Gamestate::CPUwin){
 
                             api.send(message.text_reply(format!("\n {}{}{} \n {}{}{} \n {}{}{}", 
@@ -324,10 +325,6 @@ async fn main() -> Result<(), Error> {
                             api.send(message.text_reply("You lose :( Type in the command /start to play again")).await?;
 
                             iteration = 0;
-                            curvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
-                            stream = api.stream();
-                            (cpuchoice, playerchoice) = ("", "");
-                            turnsvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
 
                         } else if matches!(stat, Gamestate::Draw){
 
@@ -336,10 +333,6 @@ async fn main() -> Result<(), Error> {
                             api.send(message.text_reply("A Draw! Type in the command /start to play again")).await?;
 
                             iteration = 0;
-                            curvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
-                            stream = api.stream();
-                            (cpuchoice, playerchoice) = ("", "");
-                            turnsvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
                         };
                     } else {
                         api.send(message.text_reply("This square was taken, choose another one")).await?;
