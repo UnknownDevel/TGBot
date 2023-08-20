@@ -238,8 +238,6 @@ async fn main() -> Result<(), Error> {
     let mut stat = Gamestate::Nowin;
     let mut iteration = 0;
     let (mut cpuchoice, mut playerchoice) = ("", "");
-    let mut turnsvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
-
     while let Some(update) = stream.next().await {
         let update = update?;
         if let UpdateKind::Message(message) = update.kind {
@@ -249,7 +247,6 @@ async fn main() -> Result<(), Error> {
                     curvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
                     stream = api.stream();
                     (cpuchoice, playerchoice) = ("", "");
-                    turnsvec = vec!["\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}", "\u{2b1c}"];
                     let ent: Option<MessageEntity> = entities.get(0).cloned();
                     if let Some(entity) = ent{
                         if MessageEntityKind::BotCommand == entity.kind && data.contains("/start"){
@@ -283,7 +280,7 @@ async fn main() -> Result<(), Error> {
                         "O" => {
                             cpuchoice = "\u{274c}";
                             playerchoice = "\u{2b55}";
-                            (curvec, _) = xoalg(&turnsvec, cpuchoice, playerchoice);
+                            (curvec, _) = xoalg(&curvec, cpuchoice, playerchoice);
                             api.send(message.text_reply
                                 (format!("Okay then, my turn is first, here is the field, choose the number of the cell you want to pick \n \n  {}{}{} \n  {}{}{} \n  {}{}{} ", 
                                 curvec[0], curvec[1], curvec[2], curvec[3], curvec[4], curvec[5], curvec[6], curvec[7], curvec[8]))).await?;
